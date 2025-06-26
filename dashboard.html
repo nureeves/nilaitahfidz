@@ -38,7 +38,6 @@
     let students = [];
 
     window.onload = function () {
-      // Ambil elemen setelah halaman siap
       const input = document.getElementById("studentName");
       const suggestionBox = document.getElementById("suggestions");
       const surahListContainer = document.getElementById("surahList");
@@ -53,6 +52,7 @@
         "Al-Kautsar", "Al-Kafirun", "An-Nashr", "Al-Lahab", "Al-Ikhlas", "Al-Falaq", "An-Nas"
       ];
 
+      // Ambil daftar nama dari siswa.txt
       fetch("siswa.txt")
         .then(response => response.text())
         .then(text => {
@@ -65,16 +65,18 @@
           console.error("Gagal memuat daftar siswa:", error);
         });
 
+      // Auto-complete: cocokkan dua huruf di mana pun dalam nama
       window.showSuggestions = function(value) {
         const val = value.trim().toLowerCase();
         suggestionBox.innerHTML = "";
+
         if (val.length < 2) {
           suggestionBox.classList.add("hidden");
           return;
         }
 
         const filtered = students.filter(name =>
-          name.toLowerCase().startsWith(val)
+          name.toLowerCase().includes(val)
         );
 
         if (filtered.length === 0) {
@@ -93,11 +95,11 @@
         suggestionBox.classList.remove("hidden");
       };
 
+      // Tampilkan daftar surat setelah nama dipilih
       function selectStudent(name) {
         input.value = name;
         suggestionBox.classList.add("hidden");
 
-        // Tampilkan daftar surat
         surahUl.innerHTML = "";
         juz30Surahs.forEach(surah => {
           const li = document.createElement("li");

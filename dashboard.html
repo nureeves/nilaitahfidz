@@ -35,77 +35,80 @@
   </div>
 
   <script>
-    // Dummy data siswa (bisa disambung ke database nanti)
     let students = [];
-	window.onload = function () {
-	  fetch("siswa.txt")
-		.then(response => response.text())
-		.then(text => {
-		  students = text.split("\n")
-						 .map(name => name.trim())
-						 .filter(name => name.length > 0);
-		})
-		.catch(error => {
-		  console.error("Gagal memuat daftar siswa:", error);
-		});
 
-    const juz30Surahs = [
-      "An-Naba’", "An-Nazi’at", "Abasa", "At-Takwir", "Al-Infithar", "Al-Muthaffifin",
-      "Al-Insyiqaq", "Al-Buruj", "Ath-Thariq", "Al-A’la", "Al-Ghasyiyah", "Al-Fajr",
-      "Al-Balad", "Asy-Syams", "Al-Lail", "Adh-Dhuha", "Asy-Syarh", "At-Tin",
-      "Al-‘Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-‘Adiyat", "Al-Qari’ah",
-      "At-Takatsur", "Al-‘Ashr", "Al-Humazah", "Al-Fil", "Quraisy", "Al-Ma’un",
-      "Al-Kautsar", "Al-Kafirun", "An-Nashr", "Al-Lahab", "Al-Ikhlas", "Al-Falaq", "An-Nas"
-    ];
+    window.onload = function () {
+      // Ambil elemen setelah halaman siap
+      const input = document.getElementById("studentName");
+      const suggestionBox = document.getElementById("suggestions");
+      const surahListContainer = document.getElementById("surahList");
+      const surahUl = surahListContainer.querySelector("ul");
 
-    const input = document.getElementById("studentName");
-    const suggestionBox = document.getElementById("suggestions");
-    const surahListContainer = document.getElementById("surahList");
-    const surahUl = surahListContainer.querySelector("ul");
+      const juz30Surahs = [
+        "An-Naba’", "An-Nazi’at", "Abasa", "At-Takwir", "Al-Infithar", "Al-Muthaffifin",
+        "Al-Insyiqaq", "Al-Buruj", "Ath-Thariq", "Al-A’la", "Al-Ghasyiyah", "Al-Fajr",
+        "Al-Balad", "Asy-Syams", "Al-Lail", "Adh-Dhuha", "Asy-Syarh", "At-Tin",
+        "Al-‘Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-‘Adiyat", "Al-Qari’ah",
+        "At-Takatsur", "Al-‘Ashr", "Al-Humazah", "Al-Fil", "Quraisy", "Al-Ma’un",
+        "Al-Kautsar", "Al-Kafirun", "An-Nashr", "Al-Lahab", "Al-Ikhlas", "Al-Falaq", "An-Nas"
+      ];
 
-    function showSuggestions(value) {
-      const val = value.trim().toLowerCase();
-      suggestionBox.innerHTML = "";
-      if (val.length < 2) {
+      fetch("siswa.txt")
+        .then(response => response.text())
+        .then(text => {
+          students = text
+            .split("\n")
+            .map(name => name.trim())
+            .filter(name => name.length > 0);
+        })
+        .catch(error => {
+          console.error("Gagal memuat daftar siswa:", error);
+        });
+
+      window.showSuggestions = function(value) {
+        const val = value.trim().toLowerCase();
+        suggestionBox.innerHTML = "";
+        if (val.length < 2) {
+          suggestionBox.classList.add("hidden");
+          return;
+        }
+
+        const filtered = students.filter(name =>
+          name.toLowerCase().startsWith(val)
+        );
+
+        if (filtered.length === 0) {
+          suggestionBox.classList.add("hidden");
+          return;
+        }
+
+        filtered.forEach(name => {
+          const li = document.createElement("li");
+          li.textContent = name;
+          li.className = "px-4 py-2 hover:bg-purple-100 cursor-pointer";
+          li.onclick = () => selectStudent(name);
+          suggestionBox.appendChild(li);
+        });
+
+        suggestionBox.classList.remove("hidden");
+      };
+
+      function selectStudent(name) {
+        input.value = name;
         suggestionBox.classList.add("hidden");
-        return;
+
+        // Tampilkan daftar surat
+        surahUl.innerHTML = "";
+        juz30Surahs.forEach(surah => {
+          const li = document.createElement("li");
+          li.textContent = surah;
+          li.className = "bg-gray-100 rounded px-3 py-2 shadow-sm";
+          surahUl.appendChild(li);
+        });
+
+        surahListContainer.classList.remove("hidden");
       }
-
-      const filtered = students.filter(name =>
-        name.toLowerCase().startsWith(val)
-      );
-
-      if (filtered.length === 0) {
-        suggestionBox.classList.add("hidden");
-        return;
-      }
-
-      filtered.forEach(name => {
-        const li = document.createElement("li");
-        li.textContent = name;
-        li.className = "px-4 py-2 hover:bg-purple-100 cursor-pointer";
-        li.onclick = () => selectStudent(name);
-        suggestionBox.appendChild(li);
-      });
-
-      suggestionBox.classList.remove("hidden");
-    }
-
-    function selectStudent(name) {
-      input.value = name;
-      suggestionBox.classList.add("hidden");
-
-      // Tampilkan daftar surat
-      surahUl.innerHTML = "";
-      juz30Surahs.forEach(surah => {
-        const li = document.createElement("li");
-        li.textContent = surah;
-        li.className = "bg-gray-100 rounded px-3 py-2 shadow-sm";
-        surahUl.appendChild(li);
-      });
-
-      surahListContainer.classList.remove("hidden");
-    }
+    };
   </script>
 </body>
 </html>

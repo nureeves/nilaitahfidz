@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md text-center">
+    <h1 class="text-2xl font-bold mb-2">Selamat Datang, <span id="username">User</span>!</h1>
+    <p class="text-gray-600 mb-4">Ini adalah halaman dashboard.</p>
+    <button onclick="logout()" class="mt-4 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg">Logout</button>
+  </div>
+
+  <script>
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const username = localStorage.getItem("username");
+
+    if (!isLoggedIn || isLoggedIn !== "true") {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("username").textContent = username;
+    }
+
+    function logout() {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("username");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

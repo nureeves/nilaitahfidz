@@ -36,19 +36,21 @@
 
   <script>
     // Dummy data siswa (bisa disambung ke database nanti)
-    const students = [
-		let students = [];
+    let students = [];
 
-		window.onload = function() {
-		  fetch("/siswa.txt")
-			.then(response => response.text())
-			.then(text => {
-			  students = text.split("\n").map(name => name.trim()).filter(name => name.length > 0);
-			})
-			.catch(error => {
-			  console.error("Gagal memuat daftar siswa:", error);
-			});
-		};
+window.onload = function () {
+  fetch("siswa.txt")
+    .then(response => response.text())
+    .then(text => {
+      students = text.split("\n")
+                     .map(name => name.trim())
+                     .filter(name => name.length > 0);
+    })
+    .catch(error => {
+      console.error("Gagal memuat daftar siswa:", error);
+    });
+};
+
     ];
 
     const juz30Surahs = [
